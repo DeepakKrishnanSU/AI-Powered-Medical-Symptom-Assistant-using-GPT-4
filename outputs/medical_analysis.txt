@@ -1,0 +1,72 @@
+======================================================================
+AI-POWERED MEDICAL SYMPTOM ASSISTANT - STRUCTURED REPORT
+Generated on: 2026-10-22 21:26:14 | Engine: Ollama (llama3.2:latest)
+======================================================================
+
+1. REPORTED SYMPTOMS
+--------------------------------
+• Body aches
+• Chest pain
+• Cough
+• Dizziness
+• Fatigue
+• Fever
+• Shortness of breath
+• Sore throat
+
+2. PATIENT INFORMATION
+--------------------------------
+Age       : 22
+Sex       : Female
+Duration  : 2 days
+Severity  : Mild
+History   : No known relevant condition
+Medication: None
+Allergies : None
+
+3. POSSIBLE CONDITIONS
+--------------------------------
+• Common Cold or Upper Respiratory Tract Infection (URTI)
+• Viral Pneumonia
+
+4. EXPLANATION
+--------------------------------
+• Common Cold or Upper Respiratory Tract Infection (URTI): ** The combination of fever, cough, sore throat, and body aches could be indicative of a viral infection such as the common cold or URTI. These conditions are often self-limiting and can be managed with over-the-counter medications and rest.
+• Viral Pneumonia: ** The presence of fever, cough, shortness of breath, and chest tightness may suggest viral pneumonia, which can be caused by various viruses. However, the mild severity of symptoms and the lack of specific risk factors (such as immunocompromised status or recent travel) make this less likely.
+
+5. MISSING INFORMATION
+--------------------------------
+• Exact measured temperature (°F or °C)
+• Cough characteristics (dry vs. productive with colored phlegm/mucus)
+• Severity progression over time (worsening, improving, or remaining constant)
+• Hydration status and oral fluid intake tolerance
+• Confirmation of any over-the-counter medications taken recently (e.g., antipyretics, painkillers)
+
+6. FOLLOW-UP QUESTIONS
+--------------------------------
+1. What is your measured temperature (in °F or °C)?
+2. When exactly did the symptoms begin, and did they start suddenly or develop gradually?
+3. Are you experiencing any difficulty breathing, wheezing, or shortness of breath while resting or walking?
+4. Is the cough dry, or is it producing phlegm or mucus (and if so, what color)?
+5. Is the throat pain affecting your ability to swallow liquids, foods, or saliva?
+
+7. MEDICAL ATTENTION GUIDANCE
+--------------------------------
+MEDICAL ATTENTION
+--------------------------------
+If symptoms are severe, rapidly worsening,
+or concerning, seek appropriate professional
+medical care.
+
+8. DISCLAIMER
+--------------------------------
+DISCLAIMER
+--------------------------------
+This AI-generated response is intended for
+educational and informational purposes only.
+It is not a medical diagnosis and does not
+replace advice from a qualified healthcare
+professional.
+For serious, worsening or urgent symptoms,
+seek appropriate medical care.
+======================================================================

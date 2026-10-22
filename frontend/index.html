@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AI-Powered Medical Symptom Assistant - Intelligent clinical assessment, symptom extraction, differential insights, and triage guidance.">
+    <meta name="theme-color" content="#0284c7">
+    <title>AuraHealth | AI-Powered Medical Symptom Assistant</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom Stylesheet -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="theme-light">
+    <!-- Top Emergency Notice Bar -->
+    <div class="emergency-top-bar" id="emergencyTopBar">
+        <div class="emergency-content">
+            <span class="emergency-badge">URGENT MEDICAL NOTICE</span>
+            <p>If you are experiencing severe chest pain, sudden numbness, difficulty breathing, or uncontrollable bleeding, please call emergency services immediately.</p>
+            <button class="emergency-dismiss" id="dismissEmergency" aria-label="Dismiss alert">&times;</button>
+        </div>
+    </div>
+
+    <!-- Navigation Header -->
+    <header class="app-header">
+        <div class="header-container">
+            <div class="brand-group">
+                <div class="brand-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+                        <path d="M12 9v6"></path>
+                        <path d="M9 12h6"></path>
+                    </svg>
+                </div>
+                <div class="brand-text">
+                    <span class="brand-title">AuraHealth</span>
+                    <span class="brand-subtitle">Clinical AI Assistant</span>
+                </div>
+            </div>
+
+            <!-- Header Action Controls -->
+            <div class="header-actions">
+                <div class="system-status-indicator" id="systemStatusBadge" title="Engine Status">
+                    <span class="status-dot online"></span>
+                    <span class="status-label" id="engineStatusLabel">Ollama Active (Local)</span>
+                </div>
+
+                <button class="btn-preset-loader" id="openPresetModalBtn" title="Load Benchmark Case">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="btn-icon">
+                        <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"></path>
+                        <path d="M6 6h10"></path>
+                        <path d="M6 10h10"></path>
+                    </svg>
+                    <span>Sample Cases</span>
+                </button>
+
+                <button class="btn-secondary-sm" id="openRedFlagsBtn" title="Emergency Red Flags Guide">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="sm-icon">
+                        <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                    <span>Red Flags</span>
+                </button>
+
+                <button class="btn-icon-toggle" id="themeToggleBtn" aria-label="Toggle dark/light theme" title="Toggle Theme">
+                    <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                    <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Application Container -->
+    <main class="main-wrapper">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-badge">Clinical AI Intelligence Engine</div>
+            <h1 class="hero-title">AI-Powered Medical Symptom Assistant</h1>
+            <p class="hero-desc">
+                Describe your symptoms in natural, everyday language. Our clinical reasoning engine evaluates your context, extracts health indicators, identifies missing factors, and provides evidence-based guidance.
+            </p>
+            <div class="disclaimer-mini-banner">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="disclaimer-icon">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+                <span><strong>Informational Notice:</strong> AuraHealth provides preliminary educational assessments, not clinical diagnoses. Always consult licensed healthcare providers.</span>
+            </div>
+        </section>
+
+        <!-- Two-Column Clinical Workspace -->
+        <div class="workspace-grid">
+            
+            <!-- LEFT COLUMN: Patient Intake & Health History Form -->
+            <section class="workspace-card intake-card" id="intakeSection">
+                <div class="card-header">
+                    <div class="card-header-title">
+                        <div class="step-circle">1</div>
+                        <div>
+                            <h2>Patient Health Profile</h2>
+                            <p class="section-subtitle">Provide demographic details and contextual medical history</p>
+                        </div>
+                    </div>
+                    <div class="card-header-actions">
+                        <button type="button" class="btn-text-secondary" id="loadBenchmarkBtn" title="Load Benchmark Case">Load Benchmark</button>
+                        <button type="button" class="btn-text-secondary" id="resetFormBtn">Reset</button>
+                    </div>
+                </div>
+
+                <form id="symptomIntakeForm" class="clinical-form">
+                    <!-- Row 1: Demographics -->
+                    <div class="form-row form-grid-2">
+                        <div class="form-group">
+                            <label for="patientAge" class="form-label">Patient Age <span class="required-star">*</span></label>
+                            <div class="input-with-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="field-icon">
+                                    <circle cx="12" cy="8" r="5"></circle>
+                                    <path d="M20 21a8 8 0 1 0-16 0"></path>
+                                </svg>
+                                <input type="number" id="patientAge" name="age" class="form-control" placeholder="e.g. 22" min="0" max="125" value="22" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="patientSex" class="form-label">Biological Sex <span class="required-star">*</span></label>
+                            <div class="input-with-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="field-icon">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
+                                    <path d="M2 12h20"></path>
+                                </svg>
+                                <select id="patientSex" name="sex" class="form-control" required>
+                                    <option value="Female" selected>Female</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Other">Other / Non-binary</option>
+                                    <option value="Prefer not to say">Prefer not to say</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Row 2: Duration & Severity -->
+                    <div class="form-row form-grid-2">
+                        <div class="form-group">
+                            <label for="symptomDuration" class="form-label">Symptom Duration <span class="required-star">*</span></label>
+                            <div class="input-with-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="field-icon">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                </svg>
+                                <input type="text" id="symptomDuration" name="duration" class="form-control" placeholder="e.g. 2 days, 1 week" value="2 days" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="reportedSeverity" class="form-label">Perceived Severity <span class="required-star">*</span></label>
+                            <div class="input-with-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="field-icon">
+                                    <path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"></path>
+                                </svg>
+                                <select id="reportedSeverity" name="severity" class="form-control" required>
+                                    <option value="Mild" selected>Mild - Annoying but manageable</option>
+                                    <option value="Moderate">Moderate - Interfering with daily tasks</option>
+                                    <option value="Severe">Severe - Incapacitating / high distress</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Row 3: Natural Language Symptoms Input -->
+                    <div class="form-group">
+                        <div class="label-with-hint">
+                            <label for="symptomsNarrative" class="form-label">Describe How You Feel (Natural Language) <span class="required-star">*</span></label>
+                            <span class="hint-text">Type your symptoms as you would describe them to a nurse</span>
+                        </div>
+                        <div class="textarea-wrapper">
+                            <textarea id="symptomsNarrative" name="symptoms_text" class="form-control narrative-textarea" rows="4" placeholder="Describe your symptoms in plain words, for example: 'I have been having fever and cough for two days. My throat is also painful.'" required>I have been having fever and cough for two days. My throat is also painful.</textarea>
+                        </div>
+                        
+                        <!-- Quick Symptom Tags -->
+                        <div class="quick-tags-container">
+                            <span class="quick-tags-label">Quick Add Symptoms:</span>
+                            <div class="tag-chips-list" id="quickTagList">
+                                <button type="button" class="tag-chip" data-symptom="Fever">+ Fever</button>
+                                <button type="button" class="tag-chip" data-symptom="Cough">+ Cough</button>
+                                <button type="button" class="tag-chip" data-symptom="Sore throat">+ Sore throat</button>
+                                <button type="button" class="tag-chip" data-symptom="Shortness of breath">+ Shortness of breath</button>
+                                <button type="button" class="tag-chip" data-symptom="Headache">+ Headache</button>
+                                <button type="button" class="tag-chip" data-symptom="Chest tightness">+ Chest tightness</button>
+                                <button type="button" class="tag-chip" data-symptom="Nausea">+ Nausea</button>
+                                <button type="button" class="tag-chip" data-symptom="Fatigue">+ Fatigue</button>
+                                <button type="button" class="tag-chip" data-symptom="Chills">+ Chills</button>
+                                <button type="button" class="tag-chip" data-symptom="Body aches">+ Body aches</button>
+                                <button type="button" class="tag-chip" data-symptom="Runny nose">+ Runny nose</button>
+                                <button type="button" class="tag-chip" data-symptom="Dizziness">+ Dizziness</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Row 4: Clinical History & Context Details -->
+                    <div class="collapsible-history-group">
+                        <div class="history-section-header">
+                            <span class="history-label">Clinical Background & Context</span>
+                            <span class="history-sub">Improves differential reasoning accuracy</span>
+                        </div>
+                        <div class="form-row form-grid-3">
+                            <div class="form-group">
+                                <label for="medicalHistory" class="form-label">Medical History</label>
+                                <input type="text" id="medicalHistory" name="medical_history" class="form-control" placeholder="e.g. Asthma, Hypertension" value="No known relevant condition">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="currentMeds" class="form-label">Current Medications</label>
+                                <input type="text" id="currentMeds" name="current_medications" class="form-control" placeholder="e.g. Paracetamol, Inhaler" value="None">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="knownAllergies" class="form-label">Known Allergies</label>
+                                <input type="text" id="knownAllergies" name="allergies" class="form-control" placeholder="e.g. Penicillin, Peanuts" value="None">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Row 5: Optional Measured Vitals -->
+                    <div class="vitals-optional-group">
+                        <div class="vitals-header">
+                            <span class="vitals-title">Optional Measured Vitals (If available)</span>
+                        </div>
+                        <div class="form-row form-grid-3">
+                            <div class="form-group">
+                                <label for="vitalTemp" class="form-label">Body Temp (°F / °C)</label>
+                                <input type="text" id="vitalTemp" name="vital_temp" class="form-control" placeholder="e.g. 101.2 °F">
+                            </div>
+                            <div class="form-group">
+                                <label for="vitalBP" class="form-label">Blood Pressure</label>
+                                <input type="text" id="vitalBP" name="vital_bp" class="form-control" placeholder="e.g. 120/80 mmHg">
+                            </div>
+                            <div class="form-group">
+                                <label for="vitalSpO2" class="form-label">Oxygen Saturation</label>
+                                <input type="text" id="vitalSpO2" name="vital_spo2" class="form-control" placeholder="e.g. 98%">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Submit Button -->
+                    <div class="form-actions-wrapper">
+                        <button type="submit" class="btn-primary-action" id="analyzeBtn">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="action-icon">
+                                <path d="m21.64 3.64-1.28-1.28a1.21 1.21 0 0 0-1.72 0L2.36 18.64a1.21 1.21 0 0 0 0 1.72l1.28 1.28a1.2 1.2 0 0 0 1.72 0L21.64 5.36a1.2 1.2 0 0 0 0-1.72Z"></path>
+                                <path d="m14 7 3 3"></path>
+                                <path d="M5 6v4"></path>
+                                <path d="M19 14v4"></path>
+                                <path d="M10 2v2"></path>
+                                <path d="M7 8H3"></path>
+                                <path d="M21 16h-4"></path>
+                                <path d="M11 3H9"></path>
+                            </svg>
+                            <span>Analyze Symptoms & Generate Clinical Report</span>
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- RIGHT COLUMN: Clinical Analysis Dashboard -->
+            <section class="workspace-card results-card" id="resultsSection">
+                <div class="card-header">
+                    <div class="card-header-title">
+                        <div class="step-circle">2</div>
+                        <div>
+                            <h2>Clinical Analysis & Triage</h2>
+                            <p class="section-subtitle">Real-time symptom extraction, differential review, and guidance</p>
+                        </div>
+                    </div>
+                    
+                    <div class="report-quick-actions" id="reportActionButtons" style="display: none;">
+                        <button class="btn-secondary-sm" id="viewRawReportBtn" title="View Text Report">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="sm-icon">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                                <polyline points="10 9 9 9 8 9"></polyline>
+                            </svg>
+                            <span>View Raw</span>
+                        </button>
+                        <button class="btn-secondary-sm" id="copyReportBtn" title="Copy Full Report">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="sm-icon">
+                                <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                                <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                            </svg>
+                            <span>Copy</span>
+                        </button>
+                        <button class="btn-secondary-sm" id="downloadReportBtn" title="Download Text Report">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="sm-icon">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                            <span>Save Report</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Empty Initial State Placeholder -->
+                <div class="empty-state-container" id="emptyStateContainer">
+                    <div class="empty-illustration">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <path d="M8 13h2"></path>
+                            <path d="M8 17h2"></path>
+                            <path d="M14 13h2"></path>
+                            <path d="M14 17h2"></path>
+                        </svg>
+                    </div>
+                    <h3>No Analysis Conducted Yet</h3>
+                    <p>Enter patient health information and symptoms on the left or load a sample case, then click <strong>Analyze Symptoms</strong> to generate the assessment.</p>
+                    <div class="empty-cta-buttons">
+                        <button type="button" class="btn-primary-sm" id="emptyLoadBenchmarkBtn">Load Benchmark Case</button>
+                    </div>
+                </div>
+
+                <!-- Active Loading Spinner State -->
+                <div class="analysis-loading-state" id="loadingStateContainer" style="display: none;">
+                    <div class="pulsing-heart-spinner">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                        </svg>
+                    </div>
+                    <h3 class="loading-status-title" id="loadingStepText">Running Symptom Extraction...</h3>
+                    <p class="loading-status-desc">Executing NLP normalization and querying local clinical reasoning engine.</p>
+                </div>
+
+                <!-- Actual Diagnostic Results Panel (Populated dynamically) -->
+                <div class="results-content-panel" id="resultsContentPanel" style="display: none;">
+                    
+                    <!-- 1. Triage Status Banner -->
+                    <div class="triage-status-card" id="triageCard">
+                        <div class="triage-badge-wrap">
+                            <span class="triage-badge" id="triageBadge">Low Risk</span>
+                        </div>
+                        <div class="triage-text">
+                            <h4 id="triageHeadline">Routine Self-Care & Outpatient Guidance</h4>
+                            <p id="triageDetails">Symptoms suggest a mild condition. Seek medical care if symptoms worsen or persist.</p>
+                        </div>
+                    </div>
+
+                    <!-- 2. Extracted Symptoms Tags -->
+                    <div class="clinical-block">
+                        <div class="block-header">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="block-icon">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="m9 12 2 2 4-4"></path>
+                            </svg>
+                            <h3>Identified Symptoms (Extracted via NLP)</h3>
+                        </div>
+                        <div class="extracted-tags-display" id="extractedTagsList">
+                            <!-- Injected by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- 3. Possible Associated Conditions -->
+                    <div class="clinical-block">
+                        <div class="block-header">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="block-icon">
+                                <rect width="18" height="18" x="3" y="3" rx="2"></rect>
+                                <path d="M7 7h10"></path>
+                                <path d="M7 12h10"></path>
+                                <path d="M7 17h10"></path>
+                            </svg>
+                            <h3>Possible Associated Explanations</h3>
+                        </div>
+                        <p class="block-sub-hint">These conditions share similar symptom profiles. They represent differential considerations, not a confirmed diagnosis.</p>
+                        <div class="conditions-cards-list" id="conditionsCardsList">
+                            <!-- Injected by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- 4. Context Analysis & Missing Information -->
+                    <div class="clinical-block">
+                        <div class="block-header">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="block-icon">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="8" x2="12" y2="12"></line>
+                                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                            </svg>
+                            <h3>Missing Context & Critical Information</h3>
+                        </div>
+                        <p class="block-sub-hint">Information not specified in your description that a physician would require for accurate triage:</p>
+                        <ul class="missing-info-list" id="missingInfoList">
+                            <!-- Injected by JavaScript -->
+                        </ul>
+                    </div>
+
+                    <!-- 5. Clinically Relevant Follow-up Questions -->
+                    <div class="clinical-block">
+                        <div class="block-header">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="block-icon">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                            </svg>
+                            <h3>Follow-Up Clarification Questions</h3>
+                        </div>
+                        <div class="questions-accordion" id="questionsList">
+                            <!-- Injected by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- 6. Non-Diagnostic Medical Disclaimer -->
+                    <div class="clinical-disclaimer-box">
+                        <div class="disclaimer-title-wrap">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="disclaimer-box-icon">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                            </svg>
+                            <h4>Official Medical Disclaimer</h4>
+                        </div>
+                        <p>
+                            This AI-generated response is intended for educational and informational purposes only. It is not a medical diagnosis and does not replace evaluation, advice, or treatment from a qualified healthcare professional. For serious, worsening, or acute emergency symptoms, seek appropriate in-person medical care.
+                        </p>
+                    </div>
+
+                </div>
+            </section>
+        </div>
+
+        <!-- Full Structured Report Viewer Modal / Drawer -->
+        <section class="report-preview-section" id="rawReportSection" style="display: none;">
+            <div class="report-preview-card">
+                <div class="report-preview-header">
+                    <div>
+                        <h3>Complete Structured Report (outputs/medical_analysis.txt)</h3>
+                        <p class="section-subtitle">Verbatim persistent report format matching clinical standard</p>
+                    </div>
+                    <div class="report-actions">
+                        <button class="btn-secondary-sm" id="copyRawReportBtn">Copy Text</button>
+                        <button class="btn-secondary-sm" id="closeRawReportBtn">Hide</button>
+                    </div>
+                </div>
+                <pre class="structured-report-code" id="structuredReportOutput"></pre>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Modal 1: Benchmark Clinical Cases Selector -->
+    <div class="modal-overlay" id="presetModalOverlay" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <div class="modal-title-group">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="modal-title-icon">
+                        <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"></path>
+                    </svg>
+                    <div>
+                        <h3>Clinical Benchmark Cases Library</h3>
+                        <p class="modal-subtitle">Choose from verified test cases from the clinical dataset (250 cases)</p>
+                    </div>
+                </div>
+                <button type="button" class="modal-close-btn" id="closePresetModalBtn">&times;</button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="search-filter-box">
+                    <input type="text" id="caseSearchInput" class="form-control" placeholder="Search by symptoms, diagnosis, or risk level...">
+                </div>
+                
+                <div class="preset-cases-list" id="presetCasesContainer">
+                    <!-- Populated dynamically via app.js -->
+                    <div class="case-card-loading">Loading clinical benchmark cases...</div>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" id="closePresetModalFooterBtn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 2: Emergency Red Flags Reference -->
+    <div class="modal-overlay" id="redFlagsModalOverlay" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-header modal-header-alert">
+                <div class="modal-title-group">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="modal-title-icon red-flag-icon">
+                        <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                    <div>
+                        <h3>Critical Medical Red Flags</h3>
+                        <p class="modal-subtitle">Signs indicating immediate emergency medical evaluation is needed</p>
+                    </div>
+                </div>
+                <button type="button" class="modal-close-btn" id="closeRedFlagsModalBtn">&times;</button>
+            </div>
+            
+            <div class="modal-body">
+                <p class="red-flag-intro">If you or someone around you experiences any of the following symptoms, stop using this application and call emergency services (e.g. 911 / 112 / 999) or proceed to the nearest emergency department immediately:</p>
+                <div class="red-flags-grid">
+                    <div class="red-flag-card">
+                        <h4>Chest & Circulatory</h4>
+                        <ul>
+                            <li>Crushing, squeezing, or radiating chest pain</li>
+                            <li>Chest pressure spreading to arm, jaw, neck, or back</li>
+                            <li>Sudden irregular heart rate or collapse</li>
+                        </ul>
+                    </div>
+                    <div class="red-flag-card">
+                        <h4>Respiratory</h4>
+                        <ul>
+                            <li>Severe difficulty breathing or suffocating feeling</li>
+                            <li>Bluish discoloration of lips, face, or fingernails</li>
+                            <li>Inability to speak in full sentences due to air hunger</li>
+                        </ul>
+                    </div>
+                    <div class="red-flag-card">
+                        <h4>Neurological</h4>
+                        <ul>
+                            <li>Sudden weakness or numbness on one side of body</li>
+                            <li>Facial drooping or slurred / incoherent speech</li>
+                            <li>Sudden severe headache ("worst headache of life")</li>
+                            <li>Loss of consciousness, fainting, or sudden confusion</li>
+                        </ul>
+                    </div>
+                    <div class="red-flag-card">
+                        <h4>Systemic & Allergic</h4>
+                        <ul>
+                            <li>Signs of anaphylaxis (throat swelling, tongue swelling)</li>
+                            <li>High persistent fever (>103°F / 39.5°C) with stiff neck</li>
+                            <li>Coughing up blood or vomiting blood / coffee-ground emesis</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button type="button" class="btn-primary" id="ackRedFlagsBtn">I Understand</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Footer -->
+    <footer class="app-footer">
+        <div class="footer-container">
+            <div class="footer-left">
+                <span class="footer-brand">AuraHealth Clinical AI</span>
+                <span class="footer-sep">|</span>
+                <span class="footer-meta">Powered by GPT-4 & Local Ollama Reasoning</span>
+            </div>
+            <div class="footer-center">
+                <span class="confidential-badge">Educational & Informational Simulator</span>
+            </div>
+            <div class="footer-right">
+                <a href="#intakeSection" class="footer-link">Back to Top</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Custom Script -->
+    <script src="js/app.js"></script>
+</body>
+</html>
